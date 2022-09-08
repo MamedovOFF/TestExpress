@@ -5,8 +5,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const config = require('config')
 const mongoose = require('mongoose')
+const bodyParser = require('body-parser');
 
-const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
 const todosRouter = require('./routes/todos')
 
 const app = express();
@@ -16,13 +17,17 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/users', usersRouter);
+app.use('/api/auth', authRouter);
 app.use('/api/todos', todosRouter)
+
+
+const accessTokenSecret = config.get('accessTokenSecret');
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
