@@ -8,12 +8,13 @@
 const app = require('../app');
 const debug = require('debug')('testexpress:server');
 const http = require('http');
+const config = require('config')
 
 /**
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort( config.get('port') ?? '5000');
 app.set('port', port);
 
 /**

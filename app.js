@@ -10,7 +10,6 @@ const usersRouter = require('./routes/users');
 const todosRouter = require('./routes/todos')
 
 const app = express();
-const PORT = config.get('port') ?? 5000
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -41,7 +40,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-const start = async () => {
+(async function () {
   try {
     const mongoUri = config.get('mongoUri')
     await mongoose.connect(mongoUri)
@@ -50,8 +49,6 @@ const start = async () => {
     console.log('Server Errors:', e.message)
     process.exit(1)
   }
-}
-start()
-app.listen(PORT, 'localhost', () => console.log(`Server Start: port ${PORT}`))
+})()
 
 module.exports = app;

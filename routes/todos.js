@@ -4,7 +4,13 @@ const router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    res.send('Get TODOS');
+    Todos.find({}, function(err, todos) {
+        const todosList = {};
+        todos.forEach(function(todos) {
+            todosList[todos._id] = todos;
+        });
+        res.send(todosList);
+    });
 });
 
 router.post('/', function(req, res, next) {
@@ -12,11 +18,13 @@ router.post('/', function(req, res, next) {
     todo.save().then((response) => {
         res.send(response);
     })
-
 });
 
-router.delete('/', function(req, res, next) {
-    res.send('delete TODOS');
+router.delete('/:id', function(req, res, next) {
+    Todos.deleteOne({_id: req.params.id}, (error) => {
+        if (error) console.log(error)
+        else res.send('delete TODOS')
+    })
 });
 
 module.exports = router;
