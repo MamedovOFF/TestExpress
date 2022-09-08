@@ -6,8 +6,8 @@ const logger = require('morgan');
 const config = require('config')
 const mongoose = require('mongoose')
 
-const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const todosRouter = require('./routes/todos')
 
 const app = express();
 const PORT = config.get('port') ?? 5000
@@ -22,8 +22,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/todos', todosRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -44,15 +44,14 @@ app.use(function(err, req, res, next) {
 const start = async () => {
   try {
     const mongoUri = config.get('mongoUri')
-    await mongoose.connect(mongoUri, {
-
-    })
+    await mongoose.connect(mongoUri)
+    mongoose.Promise = global.Promise;
   } catch (e) {
     console.log('Server Errors:', e.message)
     process.exit(1)
   }
 }
-
+start()
 app.listen(PORT, 'localhost', () => console.log(`Server Start: port ${PORT}`))
 
 module.exports = app;
